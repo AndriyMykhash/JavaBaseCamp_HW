@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -51,11 +54,9 @@ public class ProductController {
 
         System.out.println("\n");
 
-        ArrayList<Thread> treadedBugs = new ArrayList<>();
-
+        ExecutorService ex = Executors.newCachedThreadPool();
         for (int i = 0; i< numberOfBug; i++){
-            treadedBugs.add(new TreadedBug(i));
-            treadedBugs.get(i).start();
+            ex.execute(new TreadedBug(i));
         }
 
         return ResponseEntity.ok().build();
@@ -66,15 +67,12 @@ public class ProductController {
     public ResponseEntity homework1_2() {
 
         System.out.println("\n");
-        Thread t1 = new TreadedBug(1);
-        Thread t2 = new TreadedBug(2);
-        Thread t3 = new TreadedBug(3);
-        Thread t4 = new TreadedBug(4);
+        ExecutorService ex = Executors.newFixedThreadPool(4);
 
-        t1.start();
-        t2.start();
-        t3.start();
-        t4.start();
+        ex.execute(new TreadedBug());
+        ex.execute(new TreadedBug());
+        ex.execute(new TreadedBug());
+        ex.execute(new TreadedBug());
 
 
         return ResponseEntity.ok().build();
